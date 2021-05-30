@@ -13,22 +13,25 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(Xold,y,test_size=.30,random_state=42)
 
 X_testOld = copy.deepcopy(X_test)
+X_trainOld = copy.deepcopy(X_train)
 
-
+plt.figure("Figure1-numberBedroomsVprice")
 plt.plot(X_train[:,0],y_train,'o')
-plt.title("Number of Bedrooms vs The Price of The House")
+plt.title("Figure 1: Number of Bedrooms vs The Price of The House")
 plt.xlabel("# of bedrooms")
 plt.ylabel("Price of house")
 plt.show()
 
+plt.figure("Figure2-numberBathroomsVprice")
 plt.plot(X_train[:,1],y_train,'o')
-plt.title("Number of Bathrooms vs The Price of The House")
+plt.title("Figure 2: Number of Bathrooms vs The Price of The House")
 plt.xlabel("# of Bathrooms")
 plt.ylabel("Price of house")
 plt.show()
 
+plt.figure("Figure3-sizeHouseVprice")
 plt.plot(X_train[:,2],y_train,'o')
-plt.title("Size of House vs The Price of The House")
+plt.title("Figure 3: Size of House vs The Price of The House")
 plt.xlabel("Size in sqft")
 plt.ylabel("Price of house")
 plt.show()
@@ -64,13 +67,15 @@ print('root mean square error: ',np.sqrt(mean_squared_error(y_test,housing_y_pre
 
 # plot outputs
 from mpl_toolkits.mplot3d import Axes3D
-fig = plt.figure()
+fig = plt.figure("figure4-predictionVtestSet")
 ax = fig.add_subplot(111,projection='3d')
 ax.scatter(X_testOld[:, 0],X_testOld[:, 2],y_test,color='black', alpha=.7, s=5)
+#ax.scatter(X_trainOld[:, 0],X_trainOld[:, 2],y_train,color='orange', alpha=.7, s=3)
+
 
 ax.plot_trisurf(X_testOld[:, 0],X_testOld[:, 2], housing_y_pred, color= 'lightblue',linewidth=3)
 
-plt.title("Housing Prediction")
+plt.title("figure 4: Housing Prediction")
 ax.set_xlabel("# of Bedrooms")
 ax.set_ylabel("Size of House in sqft")
 ax.set_zlabel("Price of House")
