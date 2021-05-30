@@ -1,10 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
-
+import copy
 
 data = np.loadtxt("cleanedDataSet.txt", delimiter=",")
-#print(X)
 y = data[:, 0] #prices aka outputs
 Xold = data[:,1:4] #feature matrix(array)
 m = y.size #number of training examples
@@ -13,13 +12,8 @@ from sklearn.model_selection import train_test_split
 #split data into train and test sets
 X_train, X_test, y_train, y_test = train_test_split(Xold,y,test_size=.30,random_state=42)
 
-# print(X_train) #[168,3]
-# print("*********")
-# print(X_test) #[42,3]
-# print("*********")
-# print(y_train)
-# print("*********")
-# print(y_test)
+X_testOld = copy.deepcopy(X_test)
+
 
 plt.plot(X_train[:,0],y_train,'o')
 plt.title("Number of Bedrooms vs The Price of The House")
@@ -44,39 +38,42 @@ plt.show()
 from sklearn.preprocessing import StandardScaler
 
 scaler = StandardScaler()
-X_train[:, 0:] = scaler.fit_transform(X_train[:, 0:])
-X_test[:, 0:] = scaler.fit_transform(X_test[:, 0:])
-
-# print(X_train)
-# print(len(X_train),len(X_train[0]))
-# print('------')
-# print(len(X_test))
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
 
 
 #train the model
-reg = LinearRegression().fit(X_train, y_train)  #<-- needs fixing
+reg = LinearRegression().fit(X_train, y_train)
 
-print(y_test)
 
 # Make predictions using the testing set
 housing_y_pred = reg.predict(X_test)
-print(housing_y_pred)
+#print(housing_y_pred)
+
 # the coefficients theta
-print('Coefficients: \n', reg.coef_)  #<-- needs fixing
+print('Coefficients: \n', reg.coef_)
 
 # calculate metrics
 from sklearn.metrics import mean_squared_error, r2_score
 # mean square error
 print('Mean squared error: %.2f' % mean_squared_error(y_test, housing_y_pred))
-# Coefficient of determination
-print('Coefficient of determination: %.2f' % r2_score(y_test, housing_y_pred))
-print('score: %.2f' % reg.score(X_test, y_test))
+# Coefficient of determination (score)
+print('score: %.2f' % r2_score(y_test, housing_y_pred))
+print('root mean square error: ',np.sqrt(mean_squared_error(y_test,housing_y_pred)))
+
 
 # plot outputs
-plt.scatter(X_test[:, 2], y_test, color="black")
-plt.plot(X_test, housing_y_pred, color= 'blue',linewidth=2) #<--fixing
+from mpl_toolkits.mplot3d import Axes3D
+fig = plt.figure()
+ax = fig.add_subplot(111,projection='3d')
+ax.scatter(X_testOld[:, 0],X_testOld[:, 2],y_test,color='black', alpha=.7, s=5)
+
+ax.plot_trisurf(X_testOld[:, 0],X_testOld[:, 2], housing_y_pred, color= 'lightblue',linewidth=3)
+
 plt.title("Housing Prediction")
-plt.ylabel("Price of house")
-plt.xticks()
+ax.set_xlabel("# of Bedrooms")
+ax.set_ylabel("Size of House in sqft")
+ax.set_zlabel("Price of House")
+
 
 plt.show()
