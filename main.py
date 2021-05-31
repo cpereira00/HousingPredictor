@@ -70,9 +70,6 @@ from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure("figure4-predictionVtestSet")
 ax = fig.add_subplot(111,projection='3d')
 ax.scatter(X_testOld[:, 0],X_testOld[:, 2],y_test,color='black', alpha=.7, s=5)
-#ax.scatter(X_trainOld[:, 0],X_trainOld[:, 2],y_train,color='orange', alpha=.7, s=3)
-
-
 ax.plot_trisurf(X_testOld[:, 0],X_testOld[:, 2], housing_y_pred, color= 'lightblue',linewidth=3)
 
 plt.title("figure 4: Housing Prediction")
